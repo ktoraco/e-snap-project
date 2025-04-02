@@ -9,11 +9,11 @@ type PhotoGalleryProps = {
 
 const PhotoGallery: FC<PhotoGalleryProps> = ({ photos, onPhotoSelect}) => {
     return (
-        <Swiper slidePreview={3} spaceBetweeen={8}>
+        <Swiper slidesPerView={3} spaceBetween={8}>
             {photos.map((photo, index) => (
-                <swiperSlide key={index} onClick={() => onPhotoSelect(photo)}>
+                <SwiperSlide key={index} onClick={() => onPhotoSelect(photo)}>
                     <img src={photo} alt={`Screenshot ${index + 1}`} style={{ width: '100%'}} />
-                </swiperSlide>
+                </SwiperSlide>
             ))}
         </Swiper>
     );   

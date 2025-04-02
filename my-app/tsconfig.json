@@ -12,7 +12,8 @@
       "isolatedModules": true,
       "jsx": "preserve",
       "module": "esnext",
-      "moduleResolution": "node"
+      "moduleResolution": "node",
+      "types": ["react", "node"]
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/**/*", "components/**/*"],
     "exclude": ["node_modules"]
