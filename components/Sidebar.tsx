@@ -1,6 +1,7 @@
-//conmponents/sidebar.tsx
+'use client';
+
 import { FC, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 type Game = {
     id: number;
@@ -10,6 +11,7 @@ type Game = {
 
 type SidebarProps = {
     games: Game[];
+    onGameClick: (gameId: number) => void;
 };
 
 const Sidebar: FC<SidebarProps> = ({ games }) => {
