@@ -6,7 +6,7 @@ type PhotoViewerProps = {
 };
 
 const PhotoViewer: FC<PhotoViewerProps> = ({ photoUrl }) => {
-    return <img src={photoUrl} alt="Selected Game Screenshot" style="{{ width: '100%' }}"/>
+    return <img src={photoUrl} alt="Selected Game Screenshot" style={{ width: '100%' }}/>
 };
 
 export default PhotoViewer;
