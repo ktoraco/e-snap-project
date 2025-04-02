@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import ".styles/global.css";
-import MainContent from '../components/MainContent';
+import MainContent from './pages/MainContent';
 import Sidebar from '../components/Sidebar';
 
 export const metadata: { title: string; description: string } = {
