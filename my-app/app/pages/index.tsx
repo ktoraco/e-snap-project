@@ -1,11 +1,9 @@
-// pages/inex.tsx
-
+import { FC } from 'react';
 import { useState } from 'react';
-import Sidebar from '../components/Sidebar'
-import 
+import Sidebar from '../../components/Sidebar';
+import MainContent from './MainContent';
 
-type Game =import MainContent from '../../components/MainContent';
- {
+type Game = {
     id: number;
     name: string;
     icon: string;

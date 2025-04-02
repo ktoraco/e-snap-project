@@ -8,12 +8,12 @@ type Game = {
 };
 
 type SidebarProps = {
-    game: Game[];
-    ongameclick: (gameId: number) => void;
+    games: Game[];
+    onGameClick: (gameId: number) => void;
 };
 
-const sidebar: FC<SidebarProps> = ({ games, onGameClick}) => {
-    const [isOpen, setIsOpen] useState(true);
+const Sidebar: FC<SidebarProps> = ({ games, onGameClick}) => {
+    const [isOpen, setIsOpen]  = useState(true);
 
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
@@ -34,4 +34,4 @@ const sidebar: FC<SidebarProps> = ({ games, onGameClick}) => {
     )
 }
 
-export default sidebar;
+export default Sidebar;
