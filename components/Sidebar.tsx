@@ -14,7 +14,7 @@ type SidebarProps = {
     onGameClick: (gameId: number) => void;
 };
 
-const Sidebar: FC<SidebarProps> = ({ games }) => {
+const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
     const [isOpen, setIsOpen]  = useState(true);
     const router = useRouter(); //useRouterを使って遷移処理を実行する
 
@@ -23,8 +23,9 @@ const Sidebar: FC<SidebarProps> = ({ games }) => {
     };
 
     const handleClick = (gameId: number) => {
-        router.push(`/game/${gameId}`);// ゲームIDに基づいて動的ページに遷移
-    }
+        onGameClick(gameId); // 親コンポーネントに通知
+        router.push(`/game/${gameId}`); // 動的ページに遷移
+    };
 
     return (
      <div style={({ width: isOpen ? '250px' : '500px', transition: 'width 0.3s'})}>
