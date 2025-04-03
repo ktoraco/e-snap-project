@@ -14,7 +14,7 @@ type MainContentProps = {
 const MainContent: FC<MainContentProps> = ({ selectedGame }) => {
   //selectedGameがnullの状態 = つまりなにも選択されてない状態
   if(!selectedGame) {
-    return <div>Please select a game from the sidebar!</div>;
+    return <div className="font-bold ">Please select a game from the sidebar!</div>;
   }
 
   //selectedGameがGame型のオブジェクトの場合 = なんらかのGameが選択された状態
