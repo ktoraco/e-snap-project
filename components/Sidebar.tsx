@@ -32,8 +32,8 @@ const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
         <button onClick={toggleSidebar}>Toggle sidebar</button>
         <div>
             {games.map(game => (
-                <div key={game.id} onClick={()=> handleClick(game.id)}>
-                    <img src={game.icon} alt={game.name} />
+                <div key={game.id} onClick={()=> handleClick(game.id)} className="bg-gray-900 w-30 ">
+                    <img src={game.icon} alt={game.name} className='rounded-full w-10' />
                     {isOpen && <span>{game.name}</span>}
                 </div>
             ))}
