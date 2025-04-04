@@ -1,0 +1,12 @@
+microCMSでゲームごとの写真を管理する場合、以下のようにデータを構造化すると便利です。
+
+{
+  "id": "1",
+  "name": "title1",
+  "icon": "/icons/Ellipse1.svg",
+  "description": "description",
+  "photos": [
+    "/images/game1_photo1.jpg",
+    "/images/game1_photo2.jpg"
+  ]
+}
