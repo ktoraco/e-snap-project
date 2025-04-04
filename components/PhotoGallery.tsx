@@ -1,22 +1,37 @@
-import { FC } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
+import { FC } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
 
 type PhotoGalleryProps = {
-    photos: string[];
-    onPhotoSelect: (photoUrl: string) => void;
+  photos: string[];
+  onPhotoSelect: (photoUrl: string) => void;
 };
 
-const PhotoGallery: FC<PhotoGalleryProps> = ({ photos, onPhotoSelect}) => {
-    return (
-        <Swiper slidesPerView={3} spaceBetween={8}>
-            {photos.map((photo, index) => (
-                <SwiperSlide key={index} onClick={() => onPhotoSelect(photo)}>
-                    <img src={photo} alt={`Screenshot ${index + 1}`} style={{ width: '100%'}} />
-                </SwiperSlide>
-            ))}
-        </Swiper>
-    );   
+const PhotoGallery: FC = () => {
+  return (
+    <div className="max-h-[300px] overflow-hidden">
+      <Swiper
+        slidesPerView="auto"
+        spaceBetween={8}
+        direction="horizontal"
+        cssMode={false}
+        className="w-full"
+      >
+        <SwiperSlide className="w-[100px]">
+          {" "}
+          {/* スライド幅を固定 */}
+          <div className="bg-pink-500 h-[80px] w-[100px] max-w-[100px]"></div>
+        </SwiperSlide>
+        <SwiperSlide className="w-[100px]">
+          <div className="bg-blue-500 h-[80px] w-[100px] max-w-[100px]"></div>
+        </SwiperSlide>
+        <SwiperSlide className="w-[100px]">
+          <div className="bg-green-500 h-[80px] w-[100px] max-w-[100px]"></div>
+        </SwiperSlide>
+      </Swiper>
+    </div>
+  );
 };
 
 export default PhotoGallery;
