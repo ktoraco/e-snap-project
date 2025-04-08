@@ -30,10 +30,10 @@ const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
   };
 
   return (
-    <div className="flex h-screen relative">
+    <div className="flex h-screen sticky top-0 left-0"> {/* Sidebarを固定 */}
       <button
         onClick={toggleSidebar}
-        className="absolute bottom-10 left-4 z-50 text-white rounded-md md:hidden flex items-center justify-center w-12 h-12"
+        className="absolute bottom-10 left-4 z-100 text-white rounded-md md:hidden flex items-center justify-center w-12 h-12"
       >
         <img
           src={isOpen ? "/icons/sclose.svg" : "/icons/sopen.svg"}
@@ -42,11 +42,12 @@ const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
         />
       </button>
       <div
-        className={`transition-width duration-300 h-full bg-stone-900 jutify-center text-white ${
+        className={`transition-width duration-300 h-full bg-stone-900 justify-center text-white ${
           isOpen ? "w-0" : "w-14"
         }`}
       >
-        <div className="flex flex-col justify-center items-center mt-2">
+        <div className="flex flex-col justify-center items-center mt-2" onClick={() => router.push("/")}>
+          {/*router.pushはURLに追加しているのではなく、現在のURL全体が "/" に変更される*/}
           <img className="w-12" src="/icons/mdi_fire.svg" alt="Logo" />
         </div>
         <div className="flex flex-col items-center cursor-pointer gap-3 mt-2 ">

@@ -10,24 +10,25 @@ type PhotoGalleryProps = {
 
 const PhotoGallery: FC = () => {
   return (
-    <div className="max-h-[300px] overflow-hidden">
+    <div className="max-h-[300px] w-full"> {/* スクロール可能に */}
       <Swiper
-        slidesPerView="auto"
-        spaceBetween={8}
+        slidesPerView="auto" // 各スライドの幅を自動調整
+        spaceBetween={16} // スライド間の余白を16pxに設定
         direction="horizontal"
         cssMode={false}
-        className="w-full"
+        className="w-full z-30"
       >
-        <SwiperSlide className="w-[100px]">
-          {" "}
-          {/* スライド幅を固定 */}
-          <div className="bg-pink-500 h-[80px] w-[100px] max-w-[100px]"></div>
+        <SwiperSlide style={{ width: "150px" }}> {/* スライド幅を120pxに固定 */}
+          <div className="bg-pink-500 w-[150px] h-[100px] w-full"></div>
         </SwiperSlide>
-        <SwiperSlide className="w-[100px]">
-          <div className="bg-blue-500 h-[80px] w-[100px] max-w-[100px]"></div>
+        <SwiperSlide style={{ width: "150px" }}> {/* スライド幅を150pxに固定 */}
+          <div className="bg-blue-500 h-[100px] w-full"></div>
         </SwiperSlide>
-        <SwiperSlide className="w-[100px]">
-          <div className="bg-green-500 h-[80px] w-[100px] max-w-[100px]"></div>
+        <SwiperSlide style={{ width: "150px" }}> {/* スライド幅を100pxに固定 */}
+          <div className="bg-green-500 h-[100px] w-full"></div>
+        </SwiperSlide>
+        <SwiperSlide style={{ width: "150px" }}> {/* スライド幅を100pxに固定 */}
+          <div className="bg-green-500 h-[100px] w-full"></div>
         </SwiperSlide>
       </Swiper>
     </div>
