@@ -2,7 +2,7 @@ import { FC } from "react";
 
 const InfoTerminal: FC = () => {
   return (
-    <div className="bg-black text-gray-300 font-mono p-4 h-full overflow-y-auto max-h-[300px] p-2 text-xs">
+    <div className="bg-black text-gray-300 font-mono p-4 h-full overflow-y-auto max-h-[300px] p-2 text-xs hidden-scrollbar hidden-scrollbar::-webkit-scrollbar">
       <p>[INFO] Photo ID: 10234</p>
       <p>[INFO] Title: Sunset Over the Mountains</p>
       <p>[INFO] Location: Virtual World - Region 5</p>

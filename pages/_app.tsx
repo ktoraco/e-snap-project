@@ -5,7 +5,7 @@ import games from "../lib/games";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen">
       <Sidebar games={games} onGameClick={() => {}} />
       <div className="flex-grow overflow-y-scroll h-full">
         <Component {...pageProps} games={games} />
