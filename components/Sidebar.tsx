@@ -38,7 +38,7 @@ const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
       className="flex h-screen relative"
       initial={{ width: isOpen ? "0px" : "56px" }} // 初期状態
       animate={{ width: isOpen ? "0px" : "56px" }} // アニメーション
-      transition={{ duration: 0.3 }} // アニメーションの速度
+      transition={{ duration: 0.3 }} // アニメーションの速
     >
       <button
         onClick={toggleSidebar}
