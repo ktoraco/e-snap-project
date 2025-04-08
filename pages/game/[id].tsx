@@ -21,7 +21,7 @@ const GamePage = ({ games }) => {
   };
 
   return (
-    <div className="flex flex-col bg-stone-800 h-screen gap-4 p-4">
+    <div className="flex flex-col bg-stone-800 gap-4 p-4 min-h-screen">
       <h1>{selectedGame.name}</h1>
       <PhotoViewer photoUrl={photoUrl} />
       <PhotoInfoText photoDescription={photoDescription} />

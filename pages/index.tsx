@@ -16,7 +16,7 @@ const Home: FC = () => {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
 
   return (
-    <div>
+    <div className="h-full"> {/* 高さを画面全体に設定 */}
       <MainContent selectedGame={selectedGame} />
     </div>
   );

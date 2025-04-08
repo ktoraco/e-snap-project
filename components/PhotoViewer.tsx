@@ -8,7 +8,7 @@ const PhotoViewer: FC<PhotoViewerProps> = ({ photoUrl }) => {
   return (
     <div
       className="w-full relative bg-red-200 rounded-lg overflow-hidden"
-      style={{ height: "500px" }} // Changed from padding-bottom to fixed height
+      style={{ height: "200px" }} // Changed from padding-bottom to fixed height
     >
       {photoUrl ? (
         <img

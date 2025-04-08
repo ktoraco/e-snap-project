@@ -23,7 +23,7 @@ const MainContent: FC<MainContentProps> = ({ selectedGame }) => {
 
   //selectedGameがGame型のオブジェクトの場合 = なんらかのGameが選択された状態
   return (
-    <div>
+    <div className="h-full overflow-y-auto"> {/* 縦スクロール可能に */}
       <h1>{selectedGame.name}</h1>
       {/*game の infoや photoをここに表示 */}
     </div>

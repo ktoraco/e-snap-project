@@ -2,6 +2,9 @@
 
 import { FC, useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion"; // framer-motion をインポート
+import CustomIcon from "./CustomIcon";
+import { usePathname } from "next/navigation"; // 現在のパスを取得するためのフックをインポート
 
 type Game = {
   id: number;
@@ -16,7 +19,8 @@ type SidebarProps = {
 
 const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter(); //useRouterを使って遷移処理を実行する
+  const router = useRouter();
+  const pathname = usePathname(); // 現在のパスを取得
   const [selectedGameId, setSelectedGameId] = useState<number | null>(null);
 
   const toggleSidebar = () => {
@@ -25,15 +29,20 @@ const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
 
   const handleClick = (gameId: number) => {
     setSelectedGameId(gameId);
-    onGameClick(gameId); // 親コンポーネントに通知
-    router.push(`/game/${gameId}`); // 動的ページに遷移
+    onGameClick(gameId);
+    router.push(`/game/${gameId}`);
   };
 
   return (
-    <div className="flex h-screen relative">
+    <motion.div
+      className="flex h-screen relative"
+      initial={{ width: isOpen ? "0px" : "56px" }} // 初期状態
+      animate={{ width: isOpen ? "0px" : "56px" }} // アニメーション
+      transition={{ duration: 0.3 }} // アニメーションの速度
+    >
       <button
         onClick={toggleSidebar}
-        className="absolute bottom-10 left-4 z-50 text-white rounded-md md:hidden flex items-center justify-center w-12 h-12"
+        className="absolute bottom-10 left-4 z-50 text-white rounded-md flex items-center justify-center w-12 h-12"
       >
         <img
           src={isOpen ? "/icons/sclose.svg" : "/icons/sopen.svg"}
@@ -42,33 +51,38 @@ const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
         />
       </button>
       <div
-        className={`transition-width duration-300 h-full bg-stone-900 jutify-center text-white ${
+        className={`transition-width duration-300 h-full bg-stone-900 justify-center text-white ${
           isOpen ? "w-0" : "w-14"
         }`}
       >
-        <div className="flex flex-col justify-center items-center mt-2">
-          <img className="w-12" src="/icons/mdi_fire.svg" alt="Logo" />
-        </div>
-        <div className="flex flex-col items-center cursor-pointer gap-3 mt-2 ">
+        <motion.div
+          className="flex flex-col justify-center items-center mt-2 rounded-full cursor-pointer"
+          onClick={() => router.push("/")}
+          whileTap={{ scale: 0.9 }} // クリック時に縮小
+          whileHover={{ scale: 1.1 }} // ホバー時に拡大
+        >
+          <CustomIcon isGradient={pathname === "/"} /> {/* ホームの場合にグラデーション */}
+        </motion.div>
+        <div className="flex flex-col items-center cursor-pointer gap-3 mt-2">
           {games.map((game) => (
-            <div key={game.id} onClick={() => handleClick(game.id)}>
+            <motion.div
+              key={game.id}
+              onClick={() => handleClick(game.id)}
+              whileTap={{ scale: 0.9 }} // クリック時に縮小
+              whileHover={{ scale: 1.1 }} // ホバー時に拡大
+            >
               <img
                 src={game.icon}
                 alt={game.name}
-                className={`rounded-full w-9 
-                    ${
-                      selectedGameId === game.id ? "opacity-100" : "opacity-80"
-                    }`}
+                className={`rounded-full w-9 ${
+                  selectedGameId === game.id ? "opacity-100" : "opacity-80"
+                }`}
               />
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
-      <div className="flex-grow">
-        {/* メインコンテンツ */}
-        {/* 重複するメッセージを削除 */}
-      </div>
-    </div>
+    </motion.div>
   );
 };
 
