@@ -16,7 +16,7 @@ type Photo = {
 }
 
 const Home: FC = () => {
-  const [ games, setGames] = useState<Game[]>([]);
+  const [games, setGames] = useState<Game[]>([]);
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
 
