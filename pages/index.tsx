@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import MainContent from '../components/MainContent';
-import { fetchGames, fetchPhotos } from '../lib/api'; // APIからデータを取得する関数をインポート
+import { fetchGames, fetchPhotos } from '../lib/api'; 
+import 'dotenv/config';
 
 type Game = {
   id: number;
@@ -15,7 +16,7 @@ type Photo = {
 }
 
 const Home: FC = () => {
-  const [ games, setGames] = useState<Game[]>([]);
+  const [games, setGames] = useState<Game[]>([]);
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
 

@@ -9,31 +9,35 @@ type PhotoGalleryProps = {
   onPhotoSelect: (photoUrl: string) => void;
 };
 
-const PhotoGallery: FC = () => {
+const PhotoGallery: FC<PhotoGalleryProps> = ({ photos, onPhotoSelect }) => {
+  console.log("Photos in PhotoGallery:", photos); // デバッグ用ログ
+
+  if (photos.length === 0) {
+    return <div className="text-white">No photos available</div>;
+  }
+
   return (
     <div className="w-full">
       <Swiper
-        slidesPerView="auto" // スライド幅を自動調整
-        spaceBetween={16} // スライド間の余白を16pxに設定
+        slidesPerView="auto"
+        spaceBetween={16}
         direction="horizontal"
         cssMode={false}
         className="w-full z-30"
         grid={{
-          rows: 2, // 縦に2行表示
+          rows: 2,
         }}
       >
-        <SwiperSlide style={{ width: "150px" }}> {/* スライド幅を150pxに固定 */}
-          <div className="bg-pink-500 w-[150px] h-[100px]"></div>
-        </SwiperSlide>
-        <SwiperSlide style={{ width: "150px" }}> {/* スライド幅を150pxに固定 */}
-          <div className="bg-blue-500 w-[150px] h-[100px]"></div>
-        </SwiperSlide>
-        <SwiperSlide style={{ width: "150px" }}> {/* スライド幅を150pxに固定 */}
-          <div className="bg-green-500 w-[150px] h-[100px]"></div>
-        </SwiperSlide>
-        <SwiperSlide style={{ width: "150px" }}> {/* スライド幅を150pxに固定 */}
-          <div className="bg-orange-500 w-[150px] h-[100px]"></div>
-        </SwiperSlide>
+        {photos.map((photoUrl, index) => (
+          <SwiperSlide key={index} style={{ width: "150px" }}>
+            <img
+              src={photoUrl}
+              alt={`Photo ${index + 1}`}
+              className="w-full h-full object-cover cursor-pointer"
+              onClick={() => onPhotoSelect(photoUrl)}
+            />
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );
