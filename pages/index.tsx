@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import MainContent from '../components/MainContent';
-import { fetchGames, fetchPhotos } from '../lib/api'; // APIからデータを取得する関数をインポート
+import { fetchGames, fetchPhotos } from '../lib/api'; 
+import 'dotenv/config';
 
 type Game = {
   id: number;
