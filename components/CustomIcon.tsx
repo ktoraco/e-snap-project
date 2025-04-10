@@ -2,9 +2,10 @@ import { FC, useState } from "react";
 
 type CustomIconProps = {
   isGradient?: boolean;
+  size?: number; // sizeプロパティを追加
 };
 
-const CustomIcon: FC<CustomIconProps> = ({ isGradient = false }) => {
+const CustomIcon: FC<CustomIconProps> = ({ isGradient = false, size = 30 }) => {
   const [isPressed, setIsPressed] = useState(false);
 
   const handleMouseDown = () => {
@@ -18,8 +19,8 @@ const CustomIcon: FC<CustomIconProps> = ({ isGradient = false }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="30"
-      height="40"
+      width={size}
+      height={size * 1.33} // 元の縦横比（30:40）を維持
       viewBox="0 0 25 32"
       fill="none"
       onMouseDown={handleMouseDown}
