@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import CustomIcon from "./CustomIcon";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 type Game = {
   id: number;
@@ -45,9 +46,11 @@ const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
         onClick={toggleSidebar}
         className="absolute bottom-10 left-4 z-50 text-white rounded-md flex items-center justify-center w-12 h-12"
       >
-        <img
+        <Image
           src={isOpen ? "/icons/sclose.svg" : "/icons/sopen.svg"}
           alt={isOpen ? "Close" : "Open"}
+          width={48} 
+          height={48}
           className="w-12 h-12 rounded-full"
         />
       </button>
@@ -79,13 +82,15 @@ const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
                 whileTap={{ scale: 0.9 }}
                 whileHover={{ scale: 1.1 }}
               >
-                <img
+                <Image
                   src={
                     typeof game.icon === "string"
                       ? game.icon
                       : game.icon?.url || "/icons/default-icon.png"
                   }
                   alt={game.name}
+                  width={48} 
+                  height={48}
                   className={`rounded-full w-9 ${
                     selectedGameId === game.id ? "opacity-100" : "opacity-80"
                   }`}

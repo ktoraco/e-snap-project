@@ -7,6 +7,7 @@ import InfoTerminal from "../../components/InfoTerminal";
 import PhotoGallery from "../../components/PhotoGallery";
 
 
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.params!;
   const games = await fetchGames();
@@ -70,7 +71,7 @@ const GamePage = ({ selectedGame, photos }: GamePageProps) => {
       <PhotoViewer photoUrl={typeof photos[0] === "string" ? photos[0] : photos[0]?.url || ""} />
       <PhotoInfoText photoDescription={selectedGame.description} />
       <InfoTerminal />
-      <PhotoGallery photos={photos.map(photo => photo.url)} onPhotoSelect={handlePhotoSelect} />
+      <PhotoGallery photos={photos} onPhotoSelect={handlePhotoSelect} />
     </div>
   );
 };
