@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "-": "^0.0.1",
+    "@lottiefiles/dotlottie-react": "^0.13.3",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "axios": "^1.8.4",
     "dotenv": "^16.4.7",
     "framer-motion": "^12.6.3",
     "icons": "^1.0.0",
+    "lottie-react": "^2.4.1",
     "next": "15.2.4",
     "postcss": "^8.5.3",
     "react": "^19.1.0",

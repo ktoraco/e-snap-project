@@ -6,10 +6,10 @@ import { useEffect, useState } from "react";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [games, setGames] = useState([]);
-  
+
   useEffect(() => {
     const loadGames = async () => {
-      const gameData = await fetchGames();// APIからゲームデータを取得
+      const gameData = await fetchGames(); // APIからゲームデータを取得
       setGames(gameData);
     };
     loadGames();

@@ -50,9 +50,9 @@ const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
   };
 
   // モバイル用とデスクトップ用のサイズ調整
-  const sidebarWidth = isMobile ? "48px" : "56px";
-  const iconSize = isMobile ? "w-8 h-8" : "w-12 h-12";
-  const gameIconSize = isMobile ? "w-7" : "w-9";
+  const sidebarWidth = isMobile ? "78px" : "100px";
+  const iconSize = isMobile ? "w-12 h-12" : "w-14 h-14";
+  const gameIconSize = isMobile ? "w-12" : "w-14";
 
   return (
     <motion.div className="flex h-screen relative" initial={{ width: isOpen ? "0px" : sidebarWidth }} animate={{ width: isOpen ? "0px" : sidebarWidth }} transition={{ duration: 0.3 }}>
@@ -64,16 +64,16 @@ const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
       {/* サイドバーのコンテンツ */}
       <div className={`transition-width duration-300 h-full bg-stone-900 justify-center text-white ${isOpen ? "w-0" : isMobile ? "w-12" : "w-14"}`}>
         {/* ホームアイコン */}
-        <motion.div className="flex flex-col justify-center items-center mt-2 rounded-full cursor-pointer" onClick={() => router.push("/")} whileTap={{ scale: 0.9 }} whileHover={{ scale: 1.1 }}>
+        <motion.div className="flex flex-col pt-2 justify-center items-center p-top-2 mt-2 rounded-full cursor-pointer" onClick={() => router.push("/")} whileTap={{ scale: 0.9 }} whileHover={{ scale: 1.1 }}>
           <CustomIcon isGradient={pathname === "/"} size={isMobile ? 30 : 36} />
         </motion.div>
 
         {/* ゲームアイコンリスト */}
-        <div className="flex flex-col items-center cursor-pointer gap-3 mt-2">
+        <div className="flex flex-col items-center cursor-pointer pt-2 gap-3 mt-2">
           {games.map((game) => {
             return (
-              <motion.div key={game.id} onClick={() => handleClick(game.id)} whileTap={{ scale: 0.9 }} whileHover={{ scale: 1.1 }}>
-                <Image src={typeof game.icon === "string" ? game.icon : game.icon?.url || "/icons/default-icon.png"} alt={game.name} width={48} height={48} className={`rounded-full ${gameIconSize} ${selectedGameId === game.id ? "opacity-100" : "opacity-80"}`} />
+              <motion.div key={game.id} onClick={() => handleClick(game.id)} whileTap={{ scale: 0.9 }} whileHover={{ scale: 1.1 }} className={`relative ${isMobile ? "w-9 h-9" : "w-14 h-14"} rounded-full overflow-hidden`}>
+                <Image src={typeof game.icon === "string" ? game.icon : game.icon?.url || "/icons/default-icon.png"} alt={game.name} fill sizes="100%" className={`object-cover ${selectedGameId === game.id ? "opacity-100" : "opacity-80"}`} style={{ borderRadius: "50%" }} />
               </motion.div>
             );
           })}
