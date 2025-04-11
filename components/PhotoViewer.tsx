@@ -5,9 +5,10 @@ import { FiMaximize2, FiMinimize2, FiInfo } from "react-icons/fi";
 
 type PhotoViewerProps = {
   photoUrl: string;
+  gameId?: number; // ゲーム切り替えを検知するためのid
 };
 
-const PhotoViewer: FC<PhotoViewerProps> = ({ photoUrl }) => {
+const PhotoViewer: FC<PhotoViewerProps> = ({ photoUrl, gameId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -17,6 +18,14 @@ const PhotoViewer: FC<PhotoViewerProps> = ({ photoUrl }) => {
 
   // キーを使って強制的に再レンダリングさせる
   const [imageKey, setImageKey] = useState(0);
+
+  // ゲームID変更時に状態をリセット
+  useEffect(() => {
+    // ゲームが切り替わったらモーダルと情報パネルを閉じる
+    setIsModalOpen(false);
+    setShowInfo(false);
+    setImageKey((prev) => prev + 1);
+  }, [gameId]);
 
   useEffect(() => {
     if (photoUrl) {
@@ -61,11 +70,11 @@ const PhotoViewer: FC<PhotoViewerProps> = ({ photoUrl }) => {
           <AnimatePresence mode="wait">
             {isLoading ? (
               <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-gray-800 flex items-center justify-center">
-                <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
               </motion.div>
             ) : (
-              <motion.div key={`image-${imageKey}`} initial={{ opacity: 0, scale: 1.1 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="w-full h-full">
-                <Image key={photoUrl} src={photoUrl} alt="Selected Game Screenshot" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" priority className="object-cover" onClick={() => setIsModalOpen(true)} />
+              <motion.div key={`image-${imageKey}-game-${gameId || 0}`} initial={{ opacity: 0, scale: 1.1 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="w-full h-full">
+                <Image key={`${photoUrl}-${gameId}`} src={photoUrl} alt="Selected Game Screenshot" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" priority className="object-cover" onClick={() => setIsModalOpen(true)} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -75,8 +84,8 @@ const PhotoViewer: FC<PhotoViewerProps> = ({ photoUrl }) => {
           </div>
         )}
 
-        {/* コントロールボタン */}
-        <AnimatePresence>
+                 {/* コントロールボタン */}
+                 <AnimatePresence>
           {photoUrl && !isLoading && (
             <motion.div className="absolute bottom-3 right-3 flex space-x-2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ delay: 0.2 }}>
               <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} onClick={toggleInfo} className="p-2 bg-black/50 backdrop-blur-sm text-white rounded-full">
@@ -111,6 +120,7 @@ const PhotoViewer: FC<PhotoViewerProps> = ({ photoUrl }) => {
           )}
         </AnimatePresence>
       </motion.div>
+      
 
       {/* モーダル表示部分 */}
       <AnimatePresence>
@@ -134,11 +144,9 @@ const PhotoViewer: FC<PhotoViewerProps> = ({ photoUrl }) => {
                 </motion.div>
               </motion.div>
             </motion.div>
-          </>
-        )}
+          </>)}
       </AnimatePresence>
-    </>
+      </>
   );
-};
-
+} 
 export default PhotoViewer;

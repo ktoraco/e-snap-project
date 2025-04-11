@@ -5,7 +5,7 @@ import PhotoViewer from "../../components/PhotoViewer";
 import PhotoInfoText from "../../components/PhotoInfoText";
 import InfoTerminal from "../../components/InfoTerminal";
 import PhotoGallery from "../../components/PhotoGallery";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.params!;
@@ -46,8 +46,14 @@ type GamePageProps = {
 };
 
 const GamePage = ({ selectedGame, photos }: GamePageProps) => {
-  console.log("Photos in Component:", photos); // デバッグ用ログ
-  const [selectedPhotoUrl, setSelectedPhotoUrl] = useState(typeof photos[0] === "string" ? photos[0] : photos[0]?.url || "");
+  const [selectedPhotoUrl, setSelectedPhotoUrl] = useState("");
+
+  useEffect(() => {
+    if( photos && photos.length > 0) {
+      const firstPhoto = typeof photos[0] === "string" ? photos[0] : photos[0].url;
+      setSelectedPhotoUrl(firstPhoto);
+    }
+  },[selectedGame.id, photos]); //selectedGame.idが変わったときにだけ初期化
 
   const handlePhotoSelect = (photoUrl: string) => {
     console.log("Selected photo:", photoUrl);
