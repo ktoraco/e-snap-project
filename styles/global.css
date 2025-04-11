@@ -1,12 +1,26 @@
 @import "tailwindcss";
 
 @layer utilities {
-    .hidden-scrollbar {
-      -ms-overflow-style: none; /* IE, Edge 対応 */
-      scrollbar-width: none; /* Firefox 対応 */
+  .hidden-scrollbar {
+    -ms-overflow-style: none; /* IE, Edge 対応 */
+    scrollbar-width: none; /* Firefox 対応 */
+  }
+  .hidden-scrollbar::-webkit-scrollbar {
+    /* Chrome, Safari 対応 */
+    display: none;
+  }
+  
+  /* 画像プレースホルダーのアニメーション */
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
     }
-    .hidden-scrollbar::-webkit-scrollbar {
-      /* Chrome, Safari 対応 */
-      display: none;
+    50% {
+      opacity: 0.5;
     }
   }
+}
