@@ -6,11 +6,12 @@ import { motion } from "framer-motion";
 import CustomIcon from "./CustomIcon";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { useRef } from 'react';
 
 type Game = {
   id: number;
   name: string;
-  icon: string | { url: string }; // アイコンが文字列またはオブジェクトの場合に対応
+  icon: string | { url: string };
 };
 
 type SidebarProps = {
@@ -24,6 +25,7 @@ const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   // 画面幅に応じたレスポンシブ調整
   useEffect(() => {
@@ -39,6 +41,27 @@ const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
     };
   }, []);
 
+  //外部クリック検知用のイベントリスナー
+  useEffect(() => {
+    const handleClickOutSide = (event: MouseEvent) => {
+      //サイドバーが開いていて、かつクリックされた要素がサイドバーにない場合
+      if(isOpen && sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if(isOpen) {
+      document.addEventListener("mousedown", handleClickOutSide);
+      document.addEventListener("touchstart", handleClickOutSide as any);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutSide);
+      document.removeEventListener("touchstart", handleClickOutSide as any);
+    }
+  },[isOpen]);
+
+
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
@@ -47,39 +70,93 @@ const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
     setSelectedGameId(gameId);
     onGameClick(gameId);
     router.push(`/game/${gameId}`);
+    setIsOpen(false);
   };
 
-  // モバイル用とデスクトップ用のサイズ調整
-  const sidebarWidth = isMobile ? "w-[70px]" : "w-[90px]";
+  // モバイル用とデスクトップ用のサイズ調整（固定幅を設定）
+  const sidebarWidth = isMobile ? "w-[72px]" : "w-[160px]"; // 元のままの幅を維持
   const iconSize = isMobile ? "w-12 h-12" : "w-14 h-14";
-  const gameIconSize = isMobile ? "w-9 h-9" : "w-14 h-14";
+  const gameIconSize = isMobile ? "w-11 h-11" : "w-14 h-14"; // モバイルでもう少し大きく
+
+  // URLのパスからゲームIDを抽出する関数
+  useEffect(() => {
+    if (pathname.startsWith('/game/')) {
+      const id = parseInt(pathname.split('/').pop() || '0', 10);
+      if (!isNaN(id)) {
+        setSelectedGameId(id);
+      }
+    }
+  }, [pathname]);
 
   return (
-    <motion.div className={`flex h-screen ${isOpen ? "w-0" : sidebarWidth} relative`} initial={{ width: isOpen ? 0 : isMobile ? 70 : 90 }} animate={{ width: isOpen ? 0 : isMobile ? 70 : 90 }} transition={{ duration: 0.3 }}>
-      {/* サイドバーのトグルボタン - 位置を上部に調整 */}
-      <button onClick={toggleSidebar} className={`absolute ${isMobile ? "bottom-24" : "bottom-28"} left-4 z-50 text-white rounded-md flex items-center justify-center ${iconSize}`}>
-        <Image src={isOpen ? "/icons/sclose.svg" : "/icons/sopen.svg"} alt={isOpen ? "Close" : "Open"} width={48} height={48} className={`rounded-full ${iconSize}`} />
-      </button>
+    <>
+      {/* 半透明オーバーレイ - サイドバー開閉状態によって表示/非表示を制御 */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-10 transition-opacity duration-300"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+      
+      {/* サイドバー本体 */}
+      <div 
+        ref={sidebarRef}
+        className={`fixed top-0 left-0 h-screen bg-stone-900 z-20 ${!isOpen ? "w-0" : sidebarWidth} transition-all duration-300 ease-in-out`}
+        style={{ 
+          boxShadow: !isOpen ? 'none' : '0 0 10px rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        {/* サイドバーのトグルボタン */}
+        <button 
+          onClick={toggleSidebar} 
+          className={`absolute ${isMobile ? "bottom-24" : "bottom-28"} left-4 z-50 text-white rounded-md flex items-center justify-center ${iconSize}`}
+          style={{ transition: 'left 0.3s ease-in-out' }}
+        >
+          <Image src={!isOpen ? "/icons/sclose.svg" : "/icons/sopen.svg"} alt={!isOpen ? "Close" : "Open"} width={48} height={48} className={`rounded-full ${iconSize}`} />
+        </button>
 
-      {/* サイドバーのコンテンツ */}
-      <div className={`transition-all duration-300 h-full bg-stone-900 flex flex-col items-center text-white ${isOpen ? "w-0" : "w-full"}`}>
-        {/* ホームアイコン */}
-        <motion.div className="flex flex-col pt-2 justify-center items-center p-top-2 mt-2 rounded-full cursor-pointer" onClick={() => router.push("/")} whileTap={{ scale: 0.9 }} whileHover={{ scale: 1.1 }}>
-          <CustomIcon isGradient={pathname === "/"} size={isMobile ? 30 : 36} />
-        </motion.div>
+        {/* サイドバーのコンテンツ */}
+        <div className={`h-full flex flex-col items-center text-white ${!isOpen ? "opacity-0" : "opacity-100"} transition-opacity duration-200`}>
+          {/* ホームアイコン */}
+          <motion.div 
+            className="flex flex-col justify-center items-center mt-6 mb-2 rounded-full cursor-pointer" 
+            onClick={() => {
+              setSelectedGameId(null);
+              router.push("/");
+              setIsOpen(false);
+            }} 
+            whileTap={{ scale: 0.9 }} 
+            whileHover={{ scale: 1.1 }}
+          >
+            <CustomIcon isGradient={pathname === "/"} size={isMobile ? 34 : 38} />
+          </motion.div>
 
-        {/* ゲームアイコンリスト */}
-        <div className="flex flex-col items-center cursor-pointer pt-2 gap-3 mt-2">
-          {games.map((game) => {
-            return (
-              <motion.div key={game.id} onClick={() => handleClick(game.id)} whileTap={{ scale: 0.9 }} whileHover={{ scale: 1.1 }} className={`relative ${isMobile ? "w-9 h-9" : "w-14 h-14"} rounded-full overflow-hidden`}>
-                <Image src={typeof game.icon === "string" ? game.icon : game.icon?.url || "/icons/default-icon.png"} alt={game.name} fill sizes="100%" className={`object-cover ${selectedGameId === game.id ? "opacity-100" : "opacity-80"}`} style={{ borderRadius: "50%" }} />
-              </motion.div>
-            );
-          })}
+          {/* ゲームアイコンリスト */}
+          <div className="flex flex-col items-center cursor-pointer gap-5 mt-4 px-2 w-full overflow-y-auto">
+            {games.map((game) => {
+              return (
+                <motion.div 
+                  key={game.id} 
+                  onClick={() => handleClick(game.id)} 
+                  whileTap={{ scale: 0.9 }} 
+                  whileHover={{ scale: 1.1 }} 
+                  className={`relative ${gameIconSize} rounded-full overflow-hidden`}
+                >
+                  <Image 
+                    src={typeof game.icon === "string" ? game.icon : game.icon?.url || "/icons/default-icon.png"} 
+                    alt={game.name} 
+                    fill 
+                    sizes="100%" 
+                    className={`object-cover ${selectedGameId === game.id ? "opacity-100 border-2 border-blue-400" : "opacity-80"}`} 
+                    style={{ borderRadius: "50%" }} 
+                  />
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
-    </motion.div>
+    </>
   );
 };
 

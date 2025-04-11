@@ -1,8 +1,8 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, EffectCoverflow } from "swiper/modules";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/free-mode";
@@ -12,19 +12,46 @@ type Photo = { id: string; url: string; game: string };
 type PhotoGalleryProps = {
   photos: string[] | Photo[];
   onPhotoSelect: (photoUrl: string) => void;
-  selectedPhotoUrl?: string; // 追加: 現在選択されている写真のURL
+  selectedPhotoUrl?: string;
+  gameId?: number;
 };
 
-const PhotoGallery: FC<PhotoGalleryProps> = ({ photos, onPhotoSelect, selectedPhotoUrl }) => {
+const PhotoGallery: FC<PhotoGalleryProps> = ({ photos, onPhotoSelect, selectedPhotoUrl, gameId }) => {
   const [selectedPhotoId, setSelectedPhotoId] = useState<string | null>(null);
+  const [initialLoad, setInitialLoad] = useState(true);
+  
+  const photoObjects = Array.isArray(photos) && typeof photos[0] === "string" 
+    ? (photos as string[]).map((url, index) => ({ id: `${index}`, url, game: "" })) 
+    : (photos as Photo[]);
 
-  const photoObjects = Array.isArray(photos) && typeof photos[0] === "string" ? (photos as string[]).map((url, index) => ({ id: `${index}`, url, game: "" })) : (photos as Photo[]);
+  // ゲームIDが変わった場合のみ初期写真を選択
+  useEffect(() => {
+    if (photoObjects.length > 0 && (initialLoad || gameId)) {
+      // 既に選択されている写真URLと一致するものを探す
+      const matchingPhoto = selectedPhotoUrl 
+        ? photoObjects.find(p => p.url === selectedPhotoUrl) 
+        : null;
+      
+      // 一致する写真があればそれを選択、なければ1枚目を選択
+      if (matchingPhoto) {
+        setSelectedPhotoId(matchingPhoto.id);
+      } else {
+        // 最初の写真を選択する
+        const firstPhoto = photoObjects[0];
+        setSelectedPhotoId(firstPhoto.id);
+        onPhotoSelect(firstPhoto.url);
+      }
+      
+      setInitialLoad(false);
+    }
+  }, [gameId, photoObjects]); // 依存配列から selectedPhotoUrl を除外
 
+  // 写真がない場合
   if (photoObjects.length === 0) {
     return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-white bg-stone-700/50 p-6 rounded-lg text-center">
-        No photos available
-      </motion.div>
+      <div className="text-white bg-stone-700/50 p-6 rounded-lg text-center">
+        写真がありません
+      </div>
     );
   }
 
@@ -32,53 +59,33 @@ const PhotoGallery: FC<PhotoGalleryProps> = ({ photos, onPhotoSelect, selectedPh
     <div className="w-full">
       <Swiper
         slidesPerView="auto"
-        spaceBetween={16}
+        spaceBetween={10}
         freeMode={true}
-        centeredSlides={true}
-        effect="coverflow"
-        initialSlide={1}
-        loop={photoObjects.length > 3}
-        coverflowEffect={{
-          rotate: 10,
-          stretch: 0,
-          depth: 100,
-          modifier: 1,
-          slideShadows: true,
-        }}
-        grabCursor={true}
         modules={[FreeMode, EffectCoverflow]}
-        className="w-full z-30"
+        className="w-full rounded-lg"
       >
-        {photoObjects.map((photo, index: number) => {
-          const isSelected = selectedPhotoUrl === photo.url;
-
-          return (
-            <SwiperSlide key={photo.id} className="!w-auto flex items-center justify-center">
-              <motion.div whileHover={{ y: -5, scale: 1.05 }} whileTap={{ scale: 0.95 }} layoutId={`photo-${photo.id}`} className={`flex items-center justify-center h-32 ${isSelected ? "ring-2 ring-blue-400 shadow-lg shadow-blue-400/50" : ""}`}>
-                <Image
-                  src={photo.url}
-                  alt={`Photo ${index + 1}`}
-                  className={`h-full w-auto object-contain cursor-pointer rounded-md shadow-lg transition-all ${isSelected ? "brightness-110" : "hover:brightness-105"}`}
-                  onClick={() => {
-                    setSelectedPhotoId(photo.id);
-                    onPhotoSelect(photo.url); // 選択された写真のURLをPhotoViewerに渡す
-                  }}
-                  width={150}
-                  height={150}
-                />
-              </motion.div>
-            </SwiperSlide>
-          );
-        })}
+        {photoObjects.map((photo) => (
+          <SwiperSlide key={photo.id} className="!w-auto">
+            <div
+              className={`relative h-20 w-28 rounded-md overflow-hidden cursor-pointer transition-all duration-300 ${
+                selectedPhotoId === photo.id ? "ring-2 ring-blue-500 scale-105" : "opacity-70"
+              }`}
+              onClick={() => {
+                setSelectedPhotoId(photo.id);
+                onPhotoSelect(photo.url);
+              }}
+            >
+              <Image
+                src={photo.url}
+                alt={`Photo ${photo.id}`}
+                fill
+                sizes="(max-width: 768px) 30vw, 15vw"
+                className="object-cover"
+              />
+            </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
-
-      <AnimatePresence>
-        {selectedPhotoId && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-4 bg-stone-800 p-2 rounded-md">
-            <p className="text-xs text-gray-400">Selected Photo ID: {selectedPhotoId}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
