@@ -7,7 +7,15 @@ import CustomIcon from "./CustomIcon";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 
-// 型定義は省略...
+// SidebarProps 型定義
+interface SidebarProps {
+  games: Array<{
+    id: number;
+    name: string;
+    icon: string | { url: string };
+  }>;
+  onGameClick: (gameId: number) => void;
+}
 
 const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
   const [isOpen, setIsOpen] = useState(false);
