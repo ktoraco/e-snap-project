@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { fetchGames, fetchPhotos } from "../../lib/api";
 import PhotoViewer from "../../components/PhotoViewer";
@@ -16,7 +15,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   if (!selectedGame) {
     return {
-      notFound: true, // 404ページを表示
+      notFound: true, // 404ページ
     };
   }
 
@@ -65,7 +64,7 @@ const GamePage = ({ selectedGame, photos }: GamePageProps) => {
       <h1 className="text-xl font-extrabold text-stone-400">{selectedGame.title}</h1>
       <PhotoViewer photoUrl={selectedPhotoUrl} />
       <PhotoInfoText photoDescription={selectedGame.description} />
-      <InfoTerminal />
+      <InfoTerminal gameTitle={selectedGame.title} />
       <PhotoGallery photos={photos} onPhotoSelect={handlePhotoSelect} selectedPhotoUrl={selectedPhotoUrl} />
     </div>
   );

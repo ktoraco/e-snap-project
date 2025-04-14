@@ -65,7 +65,17 @@ const PhotoViewer: FC<PhotoViewerProps> = ({ photoUrl, gameId }) => {
   return (
     <>
       {/* サムネイル表示部分 */}
-      <motion.div layout className="relative rounded-lg overflow-hidden w-full" style={{ height: "200px" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+      <motion.div 
+        layout 
+        className="relative rounded-lg overflow-hidden w-full" 
+        style={{ 
+          aspectRatio: "16/9",  
+          maxHeight: "600px" }} 
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1 }} 
+        exit={{ opacity: 0 }} 
+        transition={{ duration: 0.3 }}
+      >
         {photoUrl ? (
           <AnimatePresence mode="wait">
             {isLoading ? (
@@ -84,8 +94,8 @@ const PhotoViewer: FC<PhotoViewerProps> = ({ photoUrl, gameId }) => {
           </div>
         )}
 
-                 {/* コントロールボタン */}
-                 <AnimatePresence>
+          {/* コントロールボタン */}
+          <AnimatePresence>
           {photoUrl && !isLoading && (
             <motion.div className="absolute bottom-3 right-3 flex space-x-2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ delay: 0.2 }}>
               <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} onClick={toggleInfo} className="p-2 bg-black/50 backdrop-blur-sm text-white rounded-full">

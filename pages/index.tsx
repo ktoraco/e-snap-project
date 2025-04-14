@@ -37,24 +37,6 @@ const Home: FC = () => {
   return (
     <div className="h-full">
       <MainContent selectedGame={selectedGame} />
-      <div>
-        {games.map((game) => (
-          <div key={game.id} onClick={() => setSelectedGame(game)}>
-            <img src={game.icon} alt={game.name} />
-            <p>{game.name}</p>
-            <div>
-              {getPhotoForGame(game.id.toString()).map((photo) => (
-                <img
-                  key={photo.id}
-                  src={photo.url}
-                  alt={`Photo for ${game.name}`}
-                  className="w-16 h-16"
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
   );
 };

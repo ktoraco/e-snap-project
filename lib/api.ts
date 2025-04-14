@@ -25,6 +25,9 @@ export const fetchPhotos = async () => {
     headers: {
       "X-MICROCMS-API-KEY": API_KEY,
     },
+    params: {
+      fields: "id,url,game,tags", // tagsフィールドを追加
+    }
   });
-  return response.data.contents; // 取得したphotoのデータを返す
+  return response.data.contents;
 };

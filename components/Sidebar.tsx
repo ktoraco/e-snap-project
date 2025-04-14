@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import CustomIcon from "./CustomIcon";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { FiGrid } from "react-icons/fi";
 
 // SidebarProps 型定義
 interface SidebarProps {
@@ -126,6 +127,22 @@ const Sidebar: FC<SidebarProps> = ({ games, onGameClick }) => {
             whileHover={{ scale: 1.1 }}
           >
             <CustomIcon isGradient={pathname === "/"} size={isMobile ? 34 : 38} />
+          </motion.div>
+          
+          {/* ギャラリーへのリンク */}
+          <motion.div 
+            className="flex flex-col justify-center items-center mt-2 mb-2 rounded-full cursor-pointer" 
+            onClick={() => {
+              router.push("/gallery");
+              setIsOpen(false);
+            }} 
+            whileTap={{ scale: 0.9 }} 
+            whileHover={{ scale: 1.1 }}
+          >
+            <div className={`p-2 rounded-full ${pathname === "/gallery" ? "bg-gradient-to-br from-red-500 to-blue-500" : "bg-stone-700"}`}>
+              <FiGrid size={isMobile ? 18 : 22} className="text-white" />
+            </div>
+            {!isMobile && <span className="text-xs mt-1 text-stone-300">Gallery</span>}
           </motion.div>
 
           {/* ゲームアイコンリスト */}

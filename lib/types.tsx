@@ -1,7 +1,16 @@
 export type Game = {
   id: string;
-  name: string;
-  icon: string;
+  title: string;
   description: string;
-  photos: string[];
+  icon: string | { url: string };
+};
+
+export type Photo = {
+  id: string;
+  url: Array<{ url: string }>;
+  game: { 
+    id: string;
+    title: string;
+  };
+  tags?: string[];
 };
