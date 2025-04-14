@@ -1,45 +1,104 @@
 import { FC, useState, useEffect, useMemo } from "react";
 
-const InfoTerminal: FC = () => {
+interface InfoTerminalProps {
+  gameTitle: string;
+}
+
+const InfoTerminal: FC<InfoTerminalProps> = ({ gameTitle }) => {
   const [displayedLines, setDisplayedLines] = useState<string[]>([]);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [typing, setTyping] = useState(true);
 
   // textLinesをuseMemoでコンポーネントの最上位で定義
-  const textLines = useMemo(
-    () => [
-      "[INFO] Photo ID: 10234",
-      "[INFO] Title: Sunset Over the Mountains",
-      "[INFO] Location: Virtual World - Region 5",
-      "[INFO] Captured By: User12345",
-      "[INFO] Date Captured: 2023-09-15 18:45:23",
-      "[INFO] Resolution: 1920x1080",
-      "[INFO] File Size: 2.3MB",
-      "[INFO] Format: JPEG",
-      "[INFO] Tags: #sunset #mountains #virtualworld",
-      "[INFO] Description: A breathtaking view of the sun setting over the mountains in the virtual world.",
-      "[INFO] Camera Settings:",
-      " - Aperture: f/2.8",
-      " - Shutter Speed: 1/250s",
-      " - ISO: 100",
-      " - Focal Length: 35mm",
-      "[INFO] Color Profile: sRGB",
-      "[INFO] GPS Coordinates: 35.6895° N, 139.6917° E",
-      "[INFO] Weather: Clear Skies",
-      "[INFO] Popularity: 4.8/5 (based on 234 ratings)",
-      "[INFO] Comments:",
-      ' - "Absolutely stunning!"',
-      ' - "Feels like I\'m there."',
-      ' - "Great composition and colors."',
-      "[INFO] Related Photos:",
-      " - Photo ID: 10235 (Sunrise in the Valley)",
-      " - Photo ID: 10236 (Night Sky Over the Lake)",
-    ],
-    []
-  ); // 空の依存配列で初回レンダリング時のみ生成
+  const textLines = useMemo(() => {
+    // ゲームに基づいて異なる情報を生成
+    const gameSpecificInfo = (() => {
+      const randomId = Math.floor(10000 + Math.random() * 90000);
+      
+      switch (gameTitle) {
+        case "ゴーストオブツシマ":
+          return {
+            title: ["Feudal Sunset", "Samurai Silhouette", "Path of Honor", "Peaceful Village"][Math.floor(Math.random() * 4)],
+            location: ["Tsushima Island", "Omi Village", "Golden Temple", "Komoda Beach"][Math.floor(Math.random() * 4)],
+            weather: ["Foggy", "Windy", "Clear with Falling Leaves", "Stormy"][Math.floor(Math.random() * 4)],
+            tags: ["#samurai", "#feudal-japan", "#combat", "#nature", "#historic"].sort(() => Math.random() - 0.5).slice(0, 3)
+          };
+        
+        case "原神":
+          return {
+            title: ["Teyvat Landscape", "Vision Bearer", "Elemental Magic", "Archon's Grace"][Math.floor(Math.random() * 4)],
+            location: ["Mondstadt", "Liyue Harbor", "Dragonspine", "Inazuma"][Math.floor(Math.random() * 4)],
+            weather: ["Clear Sky", "Rainy", "Thunder", "Windy"][Math.floor(Math.random() * 4)],
+            tags: ["#anime", "#fantasy", "#gacha", "#open-world", "#elemental"].sort(() => Math.random() - 0.5).slice(0, 3)
+          };
+        
+        case "ゼルダの伝説ブレスオブザワイルド":
+        case "ゼルダの伝説ティアーズオブザキングダム":
+          return {
+            title: ["Hyrule Adventure", "Wild Exploration", "Ancient Technology", "Divine Beast"][Math.floor(Math.random() * 4)],
+            location: ["Hyrule Castle", "Kakariko Village", "Great Plateau", "Gerudo Desert"][Math.floor(Math.random() * 4)],
+            weather: ["Sunny", "Stormy", "Blood Moon", "Rainy"][Math.floor(Math.random() * 4)],
+            tags: ["#hyrule", "#exploration", "#nature", "#ruins", "#puzzle"].sort(() => Math.random() - 0.5).slice(0, 3)
+          };
+        
+        case "鳴潮":
+          return {
+            title: ["Ocean Mystery", "Submerged World", "Deep Blue", "Coral Expedition"][Math.floor(Math.random() * 4)],
+            location: ["Coral Reef", "Deep Abyss", "Sunken City", "Oceanic Ridge"][Math.floor(Math.random() * 4)],
+            weather: ["Clear Waters", "Underwater Storm", "Bioluminescent", "Murky"][Math.floor(Math.random() * 4)],
+            tags: ["#underwater", "#mystery", "#ocean", "#exploration", "#sea-life"].sort(() => Math.random() - 0.5).slice(0, 3)
+          };
+        
+        case "ゼンレスゾーンゼロ":
+          return {
+            title: ["Zone Frontier", "Dimensional Portal", "Zero Gravity", "Time Anomaly"][Math.floor(Math.random() * 4)],
+            location: ["New Eridu", "Sixth Street", "Hollow District", "Boundary Zone"][Math.floor(Math.random() * 4)],
+            weather: ["Dimensional Distortion", "Clear Sky", "Energy Storm", "Nebula Effect"][Math.floor(Math.random() * 4)],
+            tags: ["#sci-fi", "#future", "#combat", "#dimension", "#urban"].sort(() => Math.random() - 0.5).slice(0, 3)
+          };
+        
+        default:
+          return {
+            title: "Game Screenshot",
+            location: "Virtual World",
+            weather: ["Clear", "Cloudy", "Rainy", "Foggy", "Stormy"][Math.floor(Math.random() * 5)],
+            tags: ["#game", "#screenshot", "#virtual"].sort(() => Math.random() - 0.5).slice(0, 3)
+          };
+      }
+    })();
+    
+    const now = new Date();
+    const dateStr = now.toISOString().split('T')[0];
+    const timeStr = now.toTimeString().split(' ')[0];
+    
+    // ランダムなカメラ設定
+    const aperture = [1.4, 1.8, 2.0, 2.8, 4.0, 5.6][Math.floor(Math.random() * 6)];
+    const shutterSpeed = ["1/30", "1/60", "1/125", "1/250", "1/500", "1/1000"][Math.floor(Math.random() * 6)];
+    const iso = [100, 200, 400, 800, 1600][Math.floor(Math.random() * 5)];
+    const focalLength = [16, 24, 35, 50, 85, 135][Math.floor(Math.random() * 6)];
+    
+    return [
+      `[INFO] Photo ID: ${Math.floor(10000 + Math.random() * 90000)}`,
+      `[INFO] Title: ${gameSpecificInfo.title}`,
+      `[INFO] Game: ${gameTitle || "Unknown Game"}`,
+      `[INFO] Location: ${gameSpecificInfo.location}`,
+      `[INFO] Captured By: Player${Math.floor(1000 + Math.random() * 9000)}`,
+      `[INFO] Date Captured: ${dateStr} ${timeStr}`,
+      `[INFO] Resolution: 1920x1080`,
+      `[INFO] Format: JPEG`,
+      `[INFO] Tags: ${gameSpecificInfo.tags.map(tag => tag).join(' ')}`,
+      `[INFO] Description: An amazing screenshot captured in ${gameSpecificInfo.location} showing the ${gameSpecificInfo.weather.toLowerCase()} weather conditions.`,
+      `[INFO] Camera Settings:`,
+      ` - Aperture: f/${aperture}`,
+      ` - Shutter Speed: ${shutterSpeed}s`,
+      ` - ISO: ${iso}`,
+      ` - Focal Length: ${focalLength}mm`,
+      `[INFO] Weather: ${gameSpecificInfo.weather}`,
+      `[INFO] Popularity: ${(3 + Math.random() * 2).toFixed(1)}/5`,
+    ];
+  }, [gameTitle]);
 
-  // 最初のuseEffectは削除（textLinesの宣言を上に移動したため）
 
   useEffect(() => {
     if (!typing) return;

@@ -58,7 +58,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       
       {/* メインアプリのレイアウト */}
       <div 
-        className="flex h-screen"
+        className="flex h-screen bg-stone-800"
         style={{ 
           opacity: loading ? 0 : 1, 
           transition: 'opacity 0.5s ease-in-out', 
@@ -66,9 +66,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         }}
       >
         <Sidebar games={games} onGameClick={() => {}} />
-        <div className="flex-grow overflow-y-auto h-full">
-          <Component {...pageProps} games={games} />
-        </div>
+
+         <main className="flex-1 overflow-y-auto bg-stone-800"> {/* 背景色をbg-stone-800に設定 */}
+          <div className="max-w-[768px] mx-auto w-full px-4 sm:px-6 md:px-8">
+            <Component {...pageProps} games={games} />
+          </div>
+        </main>
       </div>
     </>
   );

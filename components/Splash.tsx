@@ -72,7 +72,7 @@ const Splash: FC<SplashProps> = ({ onComplete, minimumDisplayTime = 2000 }) => {
       </motion.h1>
       
       <motion.div 
-        className="mt-12 w-64"
+        className="mt-12 w-64 max-w-[400px]" // 最大幅を追加
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.5 }}

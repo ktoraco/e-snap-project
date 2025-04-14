@@ -63,6 +63,7 @@ const PhotoGallery: FC<PhotoGalleryProps> = ({ photos, onPhotoSelect, selectedPh
         freeMode={true}
         modules={[FreeMode, EffectCoverflow]}
         className="w-full rounded-lg"
+        style={{ padding: '0 5px' }}
       >
         {photoObjects.map((photo) => (
           <SwiperSlide key={photo.id} className="!w-auto">
