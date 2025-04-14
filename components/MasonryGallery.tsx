@@ -238,12 +238,12 @@ const MasonryGallery: FC = () => {
         {/* 写真がない場合のメッセージ */}
         {filteredPhotos.length === 0 && (
           <div className="text-center py-12">
-            <p>条件に一致する写真がありません</p>
+            <p>No photos match your criteria</p>
             <button
-              className="mt-4 text-red-400 hover:text-red-300"
+              className="mt-4 text-red-400 hover:text-stone-300"
               onClick={resetFilters}
             >
-              フィルターをクリア
+              Clear filters
             </button>
           </div>
         )}

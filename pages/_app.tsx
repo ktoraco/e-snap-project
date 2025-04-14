@@ -67,7 +67,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       >
         <Sidebar games={games} onGameClick={() => {}} />
 
-         <main className="flex-1 overflow-y-auto bg-stone-800"> {/* 背景色をbg-stone-800に設定 */}
+         <main className="flex-1 overflow-y-auto bg-stone-800">
           <div className="max-w-[768px] mx-auto w-full sm:px-6 md:px-8">
             <Component {...pageProps} games={games} />
           </div>
