@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiMaximize2, FiMinimize2, FiInfo } from "react-icons/fi";
@@ -26,7 +26,6 @@ const PhotoViewer: FC<PhotoViewerProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [captureDate, setCaptureDate] = useState<string>("");
 
   // 画像の縦横比情報を保存するstate
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
@@ -34,55 +33,11 @@ const PhotoViewer: FC<PhotoViewerProps> = ({
   // キーを使って強制的に再レンダリングさせる
   const [imageKey, setImageKey] = useState(0);
 
-  // ゲームID変更時に状態をリセット
-  useEffect(() => {
-    // ゲームが切り替わったらモーダルと情報パネルを閉じる
-    setIsModalOpen(false);
-    setShowInfo(false);
-    setImageKey((prev) => prev + 1);
-  }, [gameId]);
+  // ランダム情報を初期化するための一意のキー
+  const [randomizationKey, setRandomizationKey] = useState(0);
 
-  useEffect(() => {
-    if (photoUrl) {
-      setIsLoading(true);
-      // photoUrlが変わったら、imageKeyを更新して強制的に再レンダリング
-      setImageKey((prev) => prev + 1);
-
-      // window.Image を使用して名前の衝突を解決
-      const img = new window.Image();
-      img.src = photoUrl;
-      img.onload = () => {
-        setIsLoading(false);
-        // 画像の縦横比情報を保存
-        setImageDimensions({
-          width: img.naturalWidth,
-          height: img.naturalHeight,
-        });
-        // 画像のExif情報等がない場合のためにランダムな日付を生成
-        if (!photoInfo?.capturedAt) {
-          // 過去3年間の範囲でランダムな日付を生成
-          const now = new Date();
-          const pastDate = new Date(
-            now.getFullYear() - Math.floor(Math.random() * 3),
-            Math.floor(Math.random() * 12),
-            Math.floor(Math.random() * 28) + 1
-          );
-          setCaptureDate(pastDate.toLocaleDateString('ja-JP', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          }));
-        } else {
-          setCaptureDate(photoInfo.capturedAt);
-        }
-      };
-    }
-  }, [photoUrl, photoInfo]);
-
-  // 写真のタイトルを生成（提供されていない場合）
-  const getPhotoTitle = () => {
+  // 写真のタイトルをメモ化（useEffectの外で一度だけ生成）
+  const memoizedPhotoTitle = useMemo(() => {
     if (photoInfo?.title) return photoInfo.title;
     
     // ランダムなタイトル生成（本番環境ではデータから取得すべき）
@@ -97,10 +52,10 @@ const PhotoViewer: FC<PhotoViewerProps> = ({
       "忘れられない風景"
     ];
     return titles[Math.floor(Math.random() * titles.length)];
-  };
+  }, [photoInfo?.title, randomizationKey]);
 
-  // 撮影場所を生成（提供されていない場合）
-  const getLocation = () => {
+  // 撮影場所をメモ化
+  const memoizedLocation = useMemo(() => {
     if (photoInfo?.location) return photoInfo.location;
     
     // ゲームタイトルがあればそれを利用
@@ -117,7 +72,56 @@ const PhotoViewer: FC<PhotoViewerProps> = ({
     }
     
     return "未知の場所";
-  };
+  }, [gameTitle, photoInfo?.location, randomizationKey]);
+
+  // 撮影日時をメモ化
+  const memoizedCaptureDate = useMemo(() => {
+    if (photoInfo?.capturedAt) return photoInfo.capturedAt;
+    
+    // 過去3年間の範囲でランダムな日付を生成 (一度だけ生成するためにuseMemoで囲む)
+    const now = new Date();
+    const pastDate = new Date(
+      now.getFullYear() - Math.floor(Math.random() * 3),
+      Math.floor(Math.random() * 12),
+      Math.floor(Math.random() * 28) + 1
+    );
+    return pastDate.toLocaleDateString('ja-JP', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }, [photoInfo?.capturedAt, randomizationKey]);
+
+  // ゲームIDまたは画像URLが変更された場合のみ状態をリセット
+  useEffect(() => {
+    // ゲームが切り替わったらモーダルと情報パネルを閉じる
+    setIsModalOpen(false);
+    setShowInfo(false);
+    setImageKey((prev) => prev + 1);
+    
+    // ランダム値を再生成するためにキーを更新
+    setRandomizationKey(prev => prev + 1);
+  }, [gameId, photoUrl]);
+
+  useEffect(() => {
+    if (photoUrl) {
+      setIsLoading(true);
+      
+      // window.Image を使用して名前の衝突を解決
+      const img = new window.Image();
+      img.src = photoUrl;
+      img.onload = () => {
+        setIsLoading(false);
+        // 画像の縦横比情報を保存
+        setImageDimensions({
+          width: img.naturalWidth,
+          height: img.naturalHeight,
+        });
+      };
+    }
+  }, [photoUrl]);
 
   const toggleModal = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -197,9 +201,9 @@ const PhotoViewer: FC<PhotoViewerProps> = ({
                 exit={{ y: 100 }}
                 onClick={(e) => e.stopPropagation()} // 情報パネル自体のクリックが親に伝播しないようにする
               >
-                <h3 className="font-bold">{getPhotoTitle()}</h3>
-                <p className="text-xs text-gray-300 mt-1">{getLocation()}</p>
-                <p className="text-xs text-gray-400 mt-1">撮影日時: {captureDate}</p>
+                <h3 className="font-bold">{memoizedPhotoTitle}</h3>
+                <p className="text-xs text-gray-300 mt-1">{memoizedLocation}</p>
+                <p className="text-xs text-gray-400 mt-1">撮影日時: {memoizedCaptureDate}</p>
                 {photoInfo?.description && (
                   <p className="text-xs text-gray-300 mt-2 line-clamp-2">{photoInfo.description}</p>
                 )}
