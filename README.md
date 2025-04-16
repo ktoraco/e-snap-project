@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# e-Snap Project
 
-## Getting Started
+このプロジェクトは、ゲーム世界のスナップ写真を閲覧できるWebアプリです。  
+フロントエンド開発とUIデザインのスキルを活用して、写真ギャラリーや詳細情報の表示機能を実装しています。
+非エンジニアの友人と共同運営するため、シンプル＆簡単＆いつどこでも更新ができるように、microCMSを導入しています。
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🤖 デモ
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🔗 [デモサイトはこちら](https://example.com/)  
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+※ゲーム内のスナップ写真が見れます！が、まだリリースしたてなため、数が少ない＆とりあえずで入れたサンプル画像も混ざってます。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🔧 使用技術
 
-To learn more about Next.js, take a look at the following resources:
+- フロントエンド：
+  - TypeScript / React / Next.js
+  - Masonryレイアウト
+- デザイン：
+  - レスポンシブデザイン
+  - カスタムアイコン
+- その他：
+  - microCMS（データ管理）
+  - 動的ルーティング
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📋 主な機能
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **写真ギャラリー**: ゲーム内のスナップ写真をカテゴリ別に表示
+- **詳細情報の表示**: 写真の詳細情報をモーダルで確認可能
+- **レスポンシブデザイン**: 様々なデバイスサイズに対応
+- **画像最適化**: 高速な画像読み込みを実現
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🌟 特徴的な実装
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Next.jsの動的ルーティングを活用したページ遷移
+- microCMSを利用したコンテンツ管理： 非エンジニアの友人と共同運営するためCMSを導入しています。
+- Masonryレイアウトによる一覧性のあるギャラリー表示
+- カスタムアイコンとアニメーションを用いた直感的なUI
+
+---
+
+## 📱 レスポンシブ対応
+
+- モバイル（428px以下）
+- タブレット（428px〜768px）
+- デスクトップ（768px以上）
+
+---
+
+## 🚀 今後の展望
+
+- 写真の検索機能の追加
+- パフォーマンス最適化：画像のプリフェッチ等
+- ユーザーインタラクションの強化：お気に入り機能やいいね機能の実装
+
+---
+
+## 👨‍💻 作者
+
+Kichita - フロントエンドエンジニア & デザイナー
+
+---
+
+## 📄 ライセンス
+
+© 2025 Kichita. All Rights Reserved.
