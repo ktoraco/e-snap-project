@@ -6,12 +6,27 @@ import { FiMaximize2, FiMinimize2, FiInfo } from "react-icons/fi";
 type PhotoViewerProps = {
   photoUrl: string;
   gameId?: number; // ゲーム切り替えを検知するためのid
+  onClose?: () => void; // 親コンポーネントから閉じる動作を制御するためのコールバック
+  gameTitle?: string; // ゲームのタイトル
+  photoInfo?: {
+    title?: string; // 写真のタイトル
+    capturedAt?: string; // 撮影日時
+    location?: string; // 撮影場所
+    description?: string; // 説明文
+  };
 };
 
-const PhotoViewer: FC<PhotoViewerProps> = ({ photoUrl, gameId }) => {
+const PhotoViewer: FC<PhotoViewerProps> = ({ 
+  photoUrl, 
+  gameId, 
+  onClose, 
+  gameTitle = "", 
+  photoInfo = {} 
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [captureDate, setCaptureDate] = useState<string>("");
 
   // 画像の縦横比情報を保存するstate
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
@@ -43,9 +58,66 @@ const PhotoViewer: FC<PhotoViewerProps> = ({ photoUrl, gameId }) => {
           width: img.naturalWidth,
           height: img.naturalHeight,
         });
+        // 画像のExif情報等がない場合のためにランダムな日付を生成
+        if (!photoInfo?.capturedAt) {
+          // 過去3年間の範囲でランダムな日付を生成
+          const now = new Date();
+          const pastDate = new Date(
+            now.getFullYear() - Math.floor(Math.random() * 3),
+            Math.floor(Math.random() * 12),
+            Math.floor(Math.random() * 28) + 1
+          );
+          setCaptureDate(pastDate.toLocaleDateString('ja-JP', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          }));
+        } else {
+          setCaptureDate(photoInfo.capturedAt);
+        }
       };
     }
-  }, [photoUrl]);
+  }, [photoUrl, photoInfo]);
+
+  // 写真のタイトルを生成（提供されていない場合）
+  const getPhotoTitle = () => {
+    if (photoInfo?.title) return photoInfo.title;
+    
+    // ランダムなタイトル生成（本番環境ではデータから取得すべき）
+    const titles = [
+      "冒険の途中で",
+      "光差す風景",
+      "静寂の一瞬",
+      "ゲーム世界の夕暮れ",
+      "未知なる場所",
+      "思い出の景色",
+      "発見の瞬間",
+      "忘れられない風景"
+    ];
+    return titles[Math.floor(Math.random() * titles.length)];
+  };
+
+  // 撮影場所を生成（提供されていない場合）
+  const getLocation = () => {
+    if (photoInfo?.location) return photoInfo.location;
+    
+    // ゲームタイトルがあればそれを利用
+    if (gameTitle) {
+      const locations = [
+        `${gameTitle} - 中央広場`,
+        `${gameTitle} - 秘密の通路`,
+        `${gameTitle} - 森の奥地`,
+        `${gameTitle} - 古代遺跡`,
+        `${gameTitle} - 城下町`,
+        `${gameTitle} - 砂漠地帯`
+      ];
+      return locations[Math.floor(Math.random() * locations.length)];
+    }
+    
+    return "未知の場所";
+  };
 
   const toggleModal = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -60,6 +132,8 @@ const PhotoViewer: FC<PhotoViewerProps> = ({ photoUrl, gameId }) => {
   // モーダル外をクリックした時にモーダルを閉じる
   const handleBackdropClick = () => {
     setIsModalOpen(false);
+    // 親コンポーネントのonCloseコールバックが提供されている場合は呼び出す
+    if (onClose) onClose();
   };
 
   return (
@@ -123,8 +197,12 @@ const PhotoViewer: FC<PhotoViewerProps> = ({ photoUrl, gameId }) => {
                 exit={{ y: 100 }}
                 onClick={(e) => e.stopPropagation()} // 情報パネル自体のクリックが親に伝播しないようにする
               >
-                <h3 className="font-bold">Sunset Over the Mountains</h3>
-                <p className="text-xs text-gray-300">Captured in Virtual World - Region 5</p>
+                <h3 className="font-bold">{getPhotoTitle()}</h3>
+                <p className="text-xs text-gray-300 mt-1">{getLocation()}</p>
+                <p className="text-xs text-gray-400 mt-1">撮影日時: {captureDate}</p>
+                {photoInfo?.description && (
+                  <p className="text-xs text-gray-300 mt-2 line-clamp-2">{photoInfo.description}</p>
+                )}
               </motion.div>
             </>
           )}
