@@ -35,7 +35,7 @@ const MainContent: FC<MainContentProps> = ({ selectedGame }) => {
         {isFirstVisit && (
           <div className="flex flex-col items-center">
             <motion.div 
-              className="text-blue-400 mb-2"
+              className="text-white mb-2"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1, duration: 0.8 }}
@@ -50,11 +50,11 @@ const MainContent: FC<MainContentProps> = ({ selectedGame }) => {
               transition={{ delay: 1.5, duration: 0.8 }}
             >
               <motion.div
-                className="w-16 h-1 bg-blue-500 mr-2"
+                className="w-16 h-1 bg-white mr-2"
                 animate={{ width: [16, 64, 16], opacity: [0.5, 1, 0.5] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
               />
-              <div className="text-blue-400">← こちらをタップ</div>
+              <div className="text-white">← こちらをタップ</div>
             </motion.div>
           </div>
         )}
