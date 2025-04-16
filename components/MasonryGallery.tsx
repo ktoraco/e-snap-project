@@ -1,5 +1,5 @@
 import { FC, useState, useEffect, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { fetchGames, fetchPhotos } from '../lib/api';
@@ -130,6 +130,12 @@ const MasonryGallery: FC = () => {
     setSelectedPhoto(photo);
     setIsModalOpen(true);
   };
+  
+  // モーダルを閉じる処理
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedPhoto(null);
+  };
 
   return (
       <div className="min-h-screen bg-stone-900 text-white p-4 md:p-6">
@@ -250,12 +256,32 @@ const MasonryGallery: FC = () => {
       </div>
       
       {/* 写真の詳細表示モーダル */}
-      {selectedPhoto && (
-        <PhotoViewer
-          photoUrl={selectedPhoto.url}
-          gameId={parseInt(selectedPhoto.gameId, 10)}
-        />
-      )}
+      <AnimatePresence>
+        {isModalOpen && selectedPhoto && (
+          <motion.div 
+            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeModal}
+          >
+            <motion.div 
+              className="relative w-11/12 h-5/6 max-w-5xl"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ type: "spring", damping: 25 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <PhotoViewer
+                photoUrl={selectedPhoto.url}
+                gameId={parseInt(selectedPhoto.gameId, 10)}
+                onClose={closeModal}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
